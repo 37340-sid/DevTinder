@@ -30,13 +30,13 @@ app.get('/feed', async (req,res)=>{
     }
 })
 app.post('/signup',async (req,res)=>{
-    console.log(req.body.firstName)
+    // console.log(req.body.firstName)
     const user=new User (req.body)
     try{
         await user.save()
         res.send('User added succssfully')
     }catch (err){
-        res.status(400).send('failed')
+        res.status(400).send('failed user' + err.message)
     }
 })
 app.delete('/user', async(req,res)=>{
@@ -53,12 +53,13 @@ app.patch('/user', async(req,res)=>{
     const data=req.body;
     try{
         const user= await User.findByIdAndUpdate({_id : userId},data,{
-            returnDocument:'after' //getting data before update with using returnDocument(before,after)
+            returnDocument:'after', //getting data before update with using returnDocument(before,after)
+            runValidators:true
         })
         console.log(user)
         res.send("User updated successfully!")
     }catch(err){
-        res.status(400).send("Something went wrong")
+        res.status(400).send("Update failed" + err.message)
     }
 })
 
